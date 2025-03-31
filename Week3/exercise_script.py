@@ -11,8 +11,30 @@ import matplotlib.patches as mpatches
 # try to print the results to the screen using the format method demonstrated in the workbook
 
 # load the necessary data here and transform to a UTM projection
+counties = gpd.read_file('Week3/data_files/Counties.shp']
+wards = gpd.read_file('Week3/data_files/NI_Wards.shp']
+counties = counties.to_crs(epsg=32629)
+wards = wards.to_crs(epsg=32629)
 
 # your analysis goes here...
+join = gpd.sjoin(counties, wards, how='inner', lsuffix='left', rsuffix='right') # join wards and counties 
+
+# find counties total population
+county_total_popn = join.groupby('CountyName')['Population'].sum() # grouped by county name and summed population
+print(county_total_popn)
+
+highest_popn_county = county_total_popn.idxmax() # finds the name of the county with highest population 
+county_popn_max = county_total_popn.max() # finds greatest population value  
+print(f'The county with the highest population is {highest_popn_county}, with a population of {county_popn_max}')
+
+lowest_popn_county = county_total_popn.idxmin() # finds county name with lowest population
+county_popn_min = county_total_popn.min() # finds lowest population value
+print(f'The county with the lowest population is {lowest_popn_county}, with a population of {county_popn_min}')
+
+ward_counties = join.groupby('Ward')['CountyName'].nunique() # group by ward and count number of unique counties associated with
+wards_multi_county = ward_counties[ward_counties > 1] # filters wards associated with more than 1 county
+print(f'Wards located in more than one county are: {wards_multi_county}')
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # below here, you may need to modify the script somewhat to create your map.

@@ -135,7 +135,10 @@ river_feat = ShapelyFeature(rivers['geometry'], # first argument is the geometry
 ax.add_feature(river_feat) # add the collection of features to the map
 
 # ShapelyFeature creates a polygon, so for point data we can just use ax.plot()
+towns = towns[towns['STATUS']== 'Town']
+cities = towns[towns['STATUS']== 'City']
 town_handle = ax.plot(towns.geometry.x, towns.geometry.y, 's', color='0.5', ms=6, transform=ccrs.PlateCarree())
+cities_handle = ax.plot(cities.geometry.x, cities.geometry.y, 'o', color='blue', label='City', ms=50, transform=ccrs.PlateCarree())
 
 # generate a list of handles for the county datasets
 # first, we add the list of names, then the list of colors, and finally we set the transparency
