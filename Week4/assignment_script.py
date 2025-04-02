@@ -62,10 +62,13 @@ with rio.open('data_files/NI_Mosaic.tif') as dataset:
 
 # your code goes here!
 # start by loading the outlines and point data to add to the map
-
+outline = gpd.read_file(os.path.abspath('Week2/data_files/NI_outline.shp'))
+towns = gpd.read_file(os.path.abspath('Week2/data_files/Towns.shp'))
+counties = gpd.read_file(os.path.abspath('Week2/data_files/Counties.shp'))
 
 # next, create the figure and axis objects to add the map to
-
+ni_utm = ccrs.UTM(29) # note that this matches with the CRS of our image
+fig, ax = plt.subplots(1, 1, figsize=(10, 10), subplot_kw=dict(projection=ni_utm))
 
 # now, add the satellite image to the map
 
@@ -83,7 +86,13 @@ with rio.open('data_files/NI_Mosaic.tif') as dataset:
 
 
 # last but not least, add gridlines to the map
+gridlines = ax.gridlines(draw_labels=True, # draw  labels for the grid lines
+                         xlocs=[-8, -7.5, -7, -6.5, -6, -5.5], # add longitude lines at 0.5 deg intervals
+                         ylocs=[54, 54.5, 55, 55.5]) # add latitude lines at 0.5 deg intervals
+gridlines.top_labels = False
+gridlines.right_labels = False
 
+fig
 
 # and of course, save the map!
-
+fig.savefig('w4_map.png', bbox_inches='tight', dpi=300)
